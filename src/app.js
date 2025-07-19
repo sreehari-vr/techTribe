@@ -1,54 +1,17 @@
 const express = require("express");
 const app = express();
 const { connectDb } = require("./config/database"); //USE ; BEFORE IIFE
-const User = require("./models/user");
+const cookieParser = require('cookie-parser')
+const User = require('./models/user')
+app.use(cookieParser())
 app.use(express.json());
-const { signUpValidation } = require("./utils/helper");
-const bcrypt = require('bcrypt');
+const authRouter = require('./Routes/auth')
+const profileRouter = require('./Routes/profile')
+const request = require('./Routes/request')
 
-app.post("/signUp", async (req, res) => {
-  //CREATING A NEW INSTANCE OF USER MODEL
-  try {
-    console.log(req.body)
-    await signUpValidation(req);
-    const { firstName, lastName, email, password,age, gender, skills, about } = req.body;
-    const encryptedPass = await bcrypt.hash(password,10)
-    console.log(encryptedPass)
-    const user = new User({
-      firstName,
-      lastName,
-      email,
-      password: encryptedPass,
-      age,
-      gender,
-      skills,
-      about
-    });
-    await user.save();
-    res.send("user saved");
-  } catch (error) {
-    res.send(error.message);
-    console.error(error.message);
-  }
-});
-
-app.post('/login', async (req, res) => {
-    try {
-        const {email, password} = req.body;
-        const user = await User.findOne({email})
-        if(!user){
-            throw new Error('Invalid Credentials')
-        }
-        const decryptedPass = await bcrypt.compare(password, user.password)
-        if(decryptedPass){
-            res.send('logged in')
-        }else{
-            throw new Error('Invalid Credentials')
-        }
-    } catch (error) {
-        res.status(400).send(error.message)
-    }
-})
+app.use('/',authRouter);
+app.use('/',profileRouter)
+app.use('/',request)
 
 app.get("/user", async (req, res) => {
   const userName = req.body.firstName;
