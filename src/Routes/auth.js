@@ -41,8 +41,8 @@ authRouter.post('/login', async (req, res) => {
         }
         const decryptedPass = await bcrypt.compare(password, user.password)
         if(decryptedPass){
-            const token = await jwt.sign({_id:user._id}, 'mangandi')
-            res.cookie('token',token)
+            const token = await jwt.sign({_id:user._id}, 'mangandi', {expiresIn:'1 d'})
+            res.cookie('token', token)
             res.send('logged in')
         }else{
             throw new Error('Invalid Credentials')
@@ -52,4 +52,10 @@ authRouter.post('/login', async (req, res) => {
     }
 })
 
+authRouter.post('/logout', (req, res) => {
+    res.cookie('token', null, {
+        expires: new Date(Date.now())
+    })
+    res.send()
+})
 module.exports = authRouter
