@@ -8,10 +8,12 @@ app.use(express.json());
 const authRouter = require('./Routes/auth')
 const profileRouter = require('./Routes/profile')
 const request = require('./Routes/request')
+const user = require('./Routes/user')
 
 app.use('/',authRouter);
 app.use('/',profileRouter)
 app.use('/',request)
+app.use('/',user)
 
 app.get("/user", async (req, res) => {
   const userName = req.body.firstName;
