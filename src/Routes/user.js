@@ -20,7 +20,7 @@ userRouter.get("/user/requests", userAuth, async (req, res) => {
       "photoUrl",
     ]);
     const requestedUsers = requests.map((x) => {
-      return x.fromUserId;
+      return ({id:x._id, user:x.fromUserId});
     });
     res.json({ message: "data fetched successfully", data: requestedUsers });
   } catch (error) {
@@ -82,11 +82,11 @@ userRouter.get("/feed", userAuth, async (req, res) => {
 
     const feedUsers = await User.find({
       _id: { $nin: Array.from(hideUsersSet) },
-    }).select("firstName lastName age skills about photoUrl")
+    }).select("firstName lastName age skills about photoUrl gender")
     .skip(skip)
     .limit(limit)
 
-    res.send(feedUsers);
+    res.json({data:feedUsers});
   } catch (error) {
     res.status(400).send(error.message);
   }

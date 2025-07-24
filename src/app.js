@@ -9,7 +9,12 @@ const authRouter = require('./Routes/auth')
 const profileRouter = require('./Routes/profile')
 const request = require('./Routes/request')
 const user = require('./Routes/user')
+const cors = require('cors')
 
+app.use(cors({
+  origin:'http://localhost:5173',
+  credentials: true
+}))
 app.use('/',authRouter);
 app.use('/',profileRouter)
 app.use('/',request)

@@ -43,12 +43,12 @@ authRouter.post('/login', async (req, res) => {
         if(decryptedPass){
             const token = await jwt.sign({_id:user._id}, 'mangandi', {expiresIn:'1 d'})
             res.cookie('token', token)
-            res.send('logged in')
+            res.send(user)
         }else{
             throw new Error('Invalid Credentials')
         }
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).json({message: error.message})
     }
 })
 

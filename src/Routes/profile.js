@@ -10,7 +10,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
     if (user) {
       res.send(user);
     } else {
-      res.send("no user");
+      res.status(401).send("no user");
     }
   } catch (error) {
     res.send(error.message);
@@ -30,9 +30,9 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
     Object.keys(data).forEach((key)=>user[key]=data[key])
     await user.save()
-    res.send(user);
+    res.json({user:user});
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({message:error.message});
   }
 });
 

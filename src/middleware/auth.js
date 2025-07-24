@@ -5,7 +5,7 @@ const userAuth = async (req, res, next) => {
     const cookies = req.cookies;
     const data = await jwt.verify(cookies.token, "mangandi");
     if (!data) {
-      throw new Error("No token found");
+      return res.status(401).send('Please login');
     }
     const user = await User.findById(data._id);
     if (!user) {
