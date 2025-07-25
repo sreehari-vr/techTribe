@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
   },
   photoUrl:{
     type: String,
-    default: 'https://cdn.vectorstock.com/i/2000v/72/80/elegant-girl-profile-portrait-vector-19257280.avif'
+    default: 'https://i.pinimg.com/736x/16/3c/d3/163cd3adf4e0090bc60f98ebd9d9f475.jpg'
   },
   password: {
     type: String,

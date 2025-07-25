@@ -22,14 +22,16 @@ requestRouter.post("/request/:status/:id", userAuth, async (req, res) => {
     if (toUserId === String(fromUserId)) {
       throw new Error("Cant sent request to yourself");
     }
-    const exist = await ConnectionRequest.find({
+    const exist = await ConnectionRequest.findOne({
       $or: [
         { toUserId, fromUserId },
         { toUserId: fromUserId, fromUserId: toUserId },
       ],
     });
-    if (exist.length > 0) {
-      throw new Error("connection request exist");
+    if (exist) {
+      return res
+          .status(400)
+          .send({ message: "Connection Request Already Exists!!" });
     }
     const connectionRequest = new ConnectionRequest({
       toUserId,
@@ -39,10 +41,12 @@ requestRouter.post("/request/:status/:id", userAuth, async (req, res) => {
 
     await connectionRequest.save();
     res.json({
-      message: req.user.firstName + " " + status + " " + validatedId.firstName,
-    });
+  message: req.user.firstName + " " + status + " " + validatedId.firstName,
+  data: connectionRequest
+});
+
   } catch (error) {
-    res.send(error.message);
+    res.status(400).send(error.message);
   }
 });
 

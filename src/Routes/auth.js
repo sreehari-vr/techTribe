@@ -24,11 +24,10 @@ authRouter.post("/signUp", async (req, res) => {
       skills,
       about
     });
-    await user.save();
-    res.send("user saved");
+    const savedUser = await user.save();
+    res.json({message:"user added", data:savedUser});
   } catch (error) {
-    res.send(error.message);
-    console.error(error.message);
+    res.status(400).send("ERROR : " + error.message);
   }
 })
 
@@ -52,10 +51,10 @@ authRouter.post('/login', async (req, res) => {
     }
 })
 
-authRouter.post('/logout', (req, res) => {
+authRouter.post('/logout', async (req, res) => {
     res.cookie('token', null, {
         expires: new Date(Date.now())
     })
-    res.send()
+    res.send("Logout successful")
 })
 module.exports = authRouter
